@@ -16,9 +16,40 @@
 
 <body>
     <div class="slide-container swiper">
+        <div class="slide-header">
+            <div class="slide-header__tittle">
+                <h1>People</h1>
+                <div>
+                    <button class="header-button create-person">Create Person</button>
+                    <button class="header-button">Event Calendar</button>
+                    <button class="header-button">Export People</button>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="filter-search">
+                    <button class="filter-button">Filter</button>
+                    <input type="text" class="search-input"
+                        placeholder="Search people by name, position title, or employee number">
+                </div>
+                <div class="header-buttons">
+                    <!-- <button class="header-button create-person">Create Person</button>
+                    <button class="header-button">Event Calendar</button>
+                    <button class="header-button">Export People</button> -->
+                    <div class="sort-by">
+                        <label for="sort">Sort By:</label>
+                        <select id="sort" class="sort-select">
+                            <option value="name-asc">Person Name A to Z</option>
+                            <option value="name-desc">Person Name Z to A</option>
+                            <!-- Add more sort options as needed -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="slide-number">221 people</h4>
         <div class="slide-content">
             <div class="card-wrapper swiper-wrapper">
-                <div class="card swiper-slide">
+                <!-- <div class="card swiper-slide">
                     <div class="image-content">
                         <span class="overlay"></span>
                         <div class="card-image">
@@ -85,13 +116,15 @@
                         </p>
                         <button class="button">View more</button>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>
         <div class="swiper-button-next swiper-navBtn"></div>
         <div class="swiper-button-prev swiper-navBtn"></div>
         <div class="swiper-pagination"></div>
+        <div class="pagination-container"></div>
+
     </div>
 </body>
 <script src="./script.js"></script>
