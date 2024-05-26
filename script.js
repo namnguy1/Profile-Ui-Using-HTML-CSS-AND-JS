@@ -1,16 +1,16 @@
-// Function to display profiles based on the current page
+
 function displayProfiles(pageNumber, profilesPerPage, profiles) {
     const startIndex = (pageNumber - 1) * profilesPerPage;
     const endIndex = startIndex + profilesPerPage;
     const currentPageProfiles = profiles.slice(startIndex, endIndex);
 
-    // Select the card wrapper element
-    const cardWrapper = document.querySelector('.card-wrapper');
-    cardWrapper.innerHTML = ''; // Clear previous content
 
-    // Loop through profiles for the current page
+    const cardWrapper = document.querySelector('.card-wrapper');
+    cardWrapper.innerHTML = ''; 
+
+
     currentPageProfiles.forEach(user => {
-        // Create card HTML dynamically
+
         const cardHTML = `
             <div class="card swiper-slide">
                 <div class="image-content">
@@ -27,12 +27,13 @@ function displayProfiles(pageNumber, profilesPerPage, profiles) {
                 </div>
             </div>
         `;
-        
-        // Append the card HTML to the card wrapper
+
         cardWrapper.innerHTML += cardHTML;
+        const profileCount = document.querySelector('.slide-number');
+        profileCount.textContent = `${profiles.length} people`;
     });
 
-    // Initialize Swiper after adding cards dynamically
+  
     var swiper = new Swiper(".slide-content", {
         slidesPerView: 3,
         spaceBetween: 25,
@@ -61,31 +62,39 @@ function displayProfiles(pageNumber, profilesPerPage, profiles) {
         }
     });
 }
+function searchProfiles(query, profiles) {
+    query = query.toLowerCase();
+    return profiles.filter(profile =>
+        profile.first_name.toLowerCase().includes(query) ||
+        profile.last_name.toLowerCase().includes(query)
+    );
+}
 
-// Fetch data from the endpoint
+
 fetch('https://ms-hop.azurewebsites.net/api/users')
     .then(response => response.json())
     .then(data => {
-        const profiles = data; // Store profiles data
-        const profilesPerPage = 10; // Number of profiles per page
-        const totalPages = Math.ceil(profiles.length / profilesPerPage); // Calculate total pages
+        const profiles = data; 
+        const profilesPerPage = 10; 
+        const totalPages = Math.ceil(profiles.length / profilesPerPage); 
 
-        // Display initial page (page 1)
+
         displayProfiles(1, profilesPerPage, profiles);
 
-        // Function to handle pagination clicks
         function handlePaginationClick(event) {
+            console.log('event: ', event);
             const pageNumber = parseInt(event.target.dataset.page);
+
             displayProfiles(pageNumber, profilesPerPage, profiles);
             updatePaginationButtons(pageNumber, totalPages);
         }
 
-        // Function to update pagination buttons
+  
         function updatePaginationButtons(currentPage, totalPages) {
             const paginationContainer = document.querySelector('.pagination-container');
-            paginationContainer.innerHTML = ''; // Clear previous buttons
+            paginationContainer.innerHTML = '';
 
-            // Previous button
+
             const prevButton = document.createElement('button');
             prevButton.innerHTML = '&lt;';
             prevButton.classList.add('pagination-button');
@@ -94,7 +103,7 @@ fetch('https://ms-hop.azurewebsites.net/api/users')
             prevButton.addEventListener('click', handlePaginationClick);
             paginationContainer.appendChild(prevButton);
 
-            // Page number buttons
+
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
                 button.textContent = i;
@@ -107,7 +116,7 @@ fetch('https://ms-hop.azurewebsites.net/api/users')
                 paginationContainer.appendChild(button);
             }
 
-            // Next button
+
             const nextButton = document.createElement('button');
             nextButton.innerHTML = '&gt;';
             nextButton.classList.add('pagination-button');
@@ -117,8 +126,19 @@ fetch('https://ms-hop.azurewebsites.net/api/users')
             paginationContainer.appendChild(nextButton);
         }
 
-        // Initialize pagination buttons for the first time
+
         updatePaginationButtons(1, totalPages);
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', event => {
+            const query = event.target.value;
+            const filteredProfiles = searchProfiles(query, profiles);
+            console.log('filteredProfiles: ', filteredProfiles);
+            const filteredTotalPages = Math.ceil(filteredProfiles.length / profilesPerPage);
+
+
+            displayProfiles(1, profilesPerPage, filteredProfiles);
+            updatePaginationButtons(1, filteredTotalPages);
+        });
     })
     .catch(error => {
         console.error('Error fetching data:', error);
